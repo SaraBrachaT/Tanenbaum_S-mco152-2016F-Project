@@ -17,7 +17,8 @@ public class Person {
 	public Person(String firstName, String lastName, int age, Gender gender, boolean married,
 			ArrayList<Restriction> rest, ArrayList<Restriction> pref, Person spouse) {
 		// check for valid data, no nulls. If issues throw new exceptions
-		this.pid = ++id;
+		int id = ++this.id;
+		this.pid = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.age = age;

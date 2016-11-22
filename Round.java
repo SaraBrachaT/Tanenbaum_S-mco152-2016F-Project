@@ -1,29 +1,33 @@
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Properties;
-import java.sql.DriverManager;
 
-public class Round {
+public class Round<T extends rounds> {
 
-	private ArrayList<String> people;
+	private ArrayList<Person> people;
 	private int roundNum;
+	private Class round;
 
 	public static int MAXROUNDS = 5;
 
 	public Round(int level, int roundNum) {
 		this.roundNum = roundNum;
 		getPeople();
+		System.out.println(people.toString());
 		// getRules();
+		System.out.println(RoundOne.displayTable());
+		RoundOne.solutions();
+	}
+
+	public Round(T round){
+		round.setUpPeople();
 	}
 
 	public void getPeople() {
-
+		people = RoundOne.setUpPeople();
 		
 	}
 
+	
 	/*public static void viewTable(Connection con, String dbName) throws SQLException {
 
 		Statement stmt = null;
@@ -47,7 +51,7 @@ public class Round {
 		}
 	}
 */
-	public static void main(String[] args) throws SQLException, ClassNotFoundException {
+	/*public static void main(String[] args) throws SQLException, ClassNotFoundException {
 		Round r = new Round(1, 1);
-	}
+	}*/
 }
