@@ -1,57 +1,46 @@
-import java.sql.SQLException;
+import java.io.File;
+
 import java.util.ArrayList;
+import java.util.Scanner;
 
-public class Round<T extends rounds> {
-
-	private ArrayList<Person> people;
-	private int roundNum;
-	private Class round;
-
-	public static int MAXROUNDS = 5;
-
-	public Round(int level, int roundNum) {
-		this.roundNum = roundNum;
-		getPeople();
-		System.out.println(people.toString());
-		// getRules();
-		System.out.println(RoundOne.displayTable());
-		RoundOne.solutions();
-	}
-
-	public Round(T round){
-		round.setUpPeople();
-	}
-
-	public void getPeople() {
-		people = RoundOne.setUpPeople();
-		
-	}
-
+public class Round {
 	
-	/*public static void viewTable(Connection con, String dbName) throws SQLException {
+///	private ArrayList<Person> people;
+///	private ArrayList<Integer> solutions;
+	private Puzzle puzzle;
+	private int levelNum;
+	private int roundNum;
+///	private Class round;
+///	public static int MAXROUNDS = 5;
 
-		Statement stmt = null;
-		String query = "select Title, LastName " + "Age, Gender " + "from " + dbName + ".Person"; //took this out: isNull(FirstName, '');
-
-		try {
-			stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
-			while (rs.next()) {
-				String name = rs.getString("LastName");
-				int age = rs.getInt("Age");
-				System.out.println(name + "\t" + age);
-			}
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			;
-		} finally {
-			if (stmt != null) {
-				stmt.close();
-			}
-		}
+	public Round(int level, int round) {
+		this.roundNum = round;
+//		getPeople();
+	//	System.out.println(people.toString());
+		// getRules();
+	//	System.out.println(RoundOne.displayTable());
+	//	RoundOne.solutions();
+		this.levelNum = level;
+		puzzle = new Puzzle(roundNum, levelNum);
 	}
-*/
-	/*public static void main(String[] args) throws SQLException, ClassNotFoundException {
-		Round r = new Round(1, 1);
-	}*/
+
+	public Round(Round round) {
+		puzzle = new Puzzle(round.getRoundNum(), round.getLevelNum());
+	}
+
+	public int getRoundNum()
+	{
+		return roundNum;
+	}
+	
+
+	public int getLevelNum()
+	{
+		return this.levelNum;
+	}
+
+	public Puzzle getPuzzle()
+	{
+		return this.puzzle;
+	}
 }

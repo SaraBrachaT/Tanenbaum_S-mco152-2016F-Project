@@ -1,5 +1,5 @@
 
 public class Scorekeeper {
 
-	//write score to .ser when exiting program
+	// write score to .ser when exiting program
 }

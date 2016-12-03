@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class RoundOne {
 
 	private static ArrayList<Person> people;
-	private static ArrayList<Integer> solutions; 
+	private static ArrayList<Integer> solutions;
 
 	public RoundOne() {
 		people = new ArrayList<Person>();
@@ -13,14 +13,13 @@ public class RoundOne {
 
 	public static ArrayList<Person> setUpPeople() {
 		people = new ArrayList<Person>();
-		
+
 		Person placeHolder = new Person(null, null, 0, null, false, null, null, null);
 
 		ArrayList<Restriction> r = new ArrayList();
 		r.add(Restriction.Want_Head);
 		Person a = new Person("Abba", "Levi", 30, Gender.MALE, true, r, null, placeHolder);
 
-		
 		r.clear();
 		Person b = new Person("Ima", "Levi", 29, Gender.FEMALE, true, null, null, a);
 		a.setSpouse(b);
@@ -69,7 +68,7 @@ public class RoundOne {
 		return s.toString();
 	}
 
-	public static ArrayList<Integer> solutions(){
+	public static ArrayList<Integer> solutions() {
 		solutions = new ArrayList<Integer>();
 		solutions.add(12756834);
 		solutions.add(12584376);
@@ -77,30 +76,32 @@ public class RoundOne {
 		solutions.add(12856734);
 		solutions.add(12574386);
 		solutions.add(16852734);
-		
+
 		return solutions;
 	}
-	
-	public static String displayTable(){
+
+	public static String displayTable() {
 		StringBuilder s = new StringBuilder();
 		s.append("The table looks like this:");
 		s.append("\n	Windows");
 		s.append("\n	__ __ __");
 		s.append("\n      __	__");
 		s.append("\n	__ __ __");
-		
-		s.append("\nEnter the person # (Ex: Abba is 1) for each seat starting on the left (the head) and move clockwise. Do not put a space between numbers");
-		
+
+		s.append(
+				"\nEnter the person # (Ex: Abba is 1) for each seat starting on the left (the head) and move clockwise. Do not put a space between numbers");
+
 		return s.toString();
 	}
+
 	public static boolean checkSolution() {
 		Scanner i = new Scanner(System.in);
-		Integer answer = i.nextInt(); //autoboxing
-		for(Integer num : solutions){
-			if(answer.equals(num)){
+		Integer answer = i.nextInt(); // autoboxing
+		for (Integer num : solutions) {
+			if (answer.equals(num)) {
 				return true;
 			}
 		}
 		return false;
-			}
+	}
 }

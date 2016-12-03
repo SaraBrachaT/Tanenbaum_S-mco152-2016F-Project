@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Person {
 
 	private int pid;
-	private String firstName; //or title
+	private String firstName; // or title
 	private String lastName;
 	private Integer age;
 	private Gender gender; // enum
@@ -13,38 +13,36 @@ public class Person {
 	private ArrayList<Restriction> preferences;
 
 	private static int id = 0;
-	
+
 	public Person(String firstName, String lastName, int age, Gender gender, boolean married,
 			ArrayList<Restriction> rest, ArrayList<Restriction> pref, Person spouse) {
 		// check for valid data, no nulls. If issues throw new exceptions
-		int id = ++this.id;
-		this.pid = id;
+		this.pid = ++id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.age = age;
 		this.gender = gender;
 		this.married = married;
 		restrictions = new ArrayList<Restriction>();
-		if(rest != null ){
+		if (rest != null) {
 			for (Restriction r : rest) {
 				this.restrictions.add(r);
 			}
 		}
-		if(pref != null){
-		preferences = new ArrayList<Restriction>();
-		for (Restriction r : pref) {
-			this.preferences.add(r);
-		}
+		if (pref != null) {
+			preferences = new ArrayList<Restriction>();
+			for (Restriction r : pref) {
+				this.preferences.add(r);
+			}
 		}
 		this.spouse = spouse; // maybe just do spouse.getName() here, we'll see
 								// if we end up using other fields of spouse
 
 	}
-	
-	public void setSpouse(Person s){
+
+	public void setSpouse(Person s) {
 		this.spouse = s;
 	}
-
 
 	public String getName() {
 		StringBuilder s = new StringBuilder();
@@ -59,7 +57,7 @@ public class Person {
 
 	public String toString() {
 		StringBuilder s = new StringBuilder();
-		s.append("\nPerson Number: ");
+		s.append("\n\nPerson Number: ");
 		s.append(id);
 		s.append("\nName: ");
 		s.append(firstName);
@@ -72,13 +70,13 @@ public class Person {
 		if (married) {
 			s.append(spouse.getName());
 		}
-		if (restrictions!=null) {
+		if (restrictions != null) {
 			s.append("\nRestrictions: ");
 			for (Restriction r : restrictions) {
 				s.append(r.getRestrictionDescr().toString());
 			}
 		}
-		if (preferences!=null){
+		if (preferences != null) {
 			s.append("\nPreferences: ");
 			for (Restriction r : restrictions) {
 				s.append(r.getRestrictionDescr().toString());
