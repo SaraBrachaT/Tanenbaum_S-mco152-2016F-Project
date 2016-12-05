@@ -7,12 +7,12 @@ import java.util.Scanner;
 public class Level {
 
 	private int levelNum;
-	private int numRounds;
 	private ArrayList<Round> rounds;
 	private ArrayList<String> levelRules;
 	
-	public Level(int roundsNum) throws FileNotFoundException {
-		numRounds = roundsNum;
+	private static int numRounds;
+	
+	public Level() throws FileNotFoundException {
 		levelNum = 1;
 		rounds = new ArrayList<Round>();
 		levelRules = new ArrayList<String>();
@@ -22,7 +22,7 @@ public class Level {
 	}
 //do super for multiple constructors in all classes
 	
-	public Level(int level, int roundsNum) {
+	public Level(int level) {
 		// do data validation
 		// put in level rules
 		levelNum = level;
@@ -61,13 +61,10 @@ public class Level {
 	public static void main(String[] args)
 	{
 		Level l;
-		try {
+
 			l = new Level(1);
 			System.out.println(l.getLevelRules());
-			
-		} catch (FileNotFoundException e) {
-			System.out.println("Didn't work! Sorry... (to get level rules)");
-		}
+
 		
 		try {
 			l = new Level(1);
