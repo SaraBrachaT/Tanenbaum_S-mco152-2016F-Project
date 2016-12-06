@@ -94,14 +94,5 @@ public class RoundOne {
 		return s.toString();
 	}
 
-	public static boolean checkSolution() {
-		Scanner i = new Scanner(System.in);
-		Integer answer = i.nextInt(); // autoboxing
-		for (Integer num : solutions) {
-			if (answer.equals(num)) {
-				return true;
-			}
-		}
-		return false;
-	}
+
 }

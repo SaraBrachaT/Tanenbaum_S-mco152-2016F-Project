@@ -62,16 +62,11 @@ public class Level {
 	{
 		Level l;
 
-			l = new Level(1);
-			System.out.println(l.getLevelRules());
+		l = new Level(1);
+		System.out.println(l.getLevelRules());
 
-		
-		try {
-			l = new Level(1);
-			System.out.println(l.rounds.get(0).getPuzzle().getSolutions());
-		} catch (FileNotFoundException e) {
-			System.out.println("Couldn't get solutions");
-		}
-		
+		l = new Level(1);
+		System.out.println(l.rounds.get(0).getPuzzle().getSolutions());
+
 	}
 }

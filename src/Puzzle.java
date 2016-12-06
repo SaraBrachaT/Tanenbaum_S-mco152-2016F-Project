@@ -15,8 +15,6 @@ public class Puzzle {
 
 	private int level;
 	private int round;
-	private String levelS;
-	private String roundS;
 	private ArrayList<Integer> solutions;
 	private ArrayList<String> people;
 	private String tableDisplay;
@@ -29,64 +27,28 @@ public class Puzzle {
 		people = new ArrayList<String>();
 	}
 	
-	public ArrayList<Integer> getSolutions() throws FileNotFoundException
+	public ArrayList<Integer> setUpSolutions() throws FileNotFoundException
 	{
-		String puzzleNum = getPuzzleNumAsString();
+		String puzzleNum =(level + "-" + round);
 		String fileName = (puzzleNum + ".txt");
 		File solutionFile = new File(fileName);
 		Scanner fileInput = new Scanner(solutionFile);
-		while (fileInput.hasNextLine()) {
-			if (fileInput.next().equals("Solution")) {
+		while (fileInput.hasNextLine()) 
+		{
+			if (fileInput.next().equals("Solution")) 
+			{
 				break;
 			}
 		}
-		while(fileInput.hasNextLine())
+	
+		while(fileInput.hasNextInt())
 		{
-			if(fileInput.nextLine().equals("TableSetup")){
-				break;
-			}
 			solutions.add(fileInput.nextInt());
 		}
 		
 		return solutions;
 	}
-	
-	public String getPuzzleNumAsString()
-	{
-		switch (level)
-		{
-		case 1:
-			levelS = "one";
-			break;
-		case 2:
-			levelS = "two";
-			break;
-		case 3:
-			levelS = "three";
-			break;
-		case 4: 
-			levelS = "four";
-			break;
-		}
-		switch (round)
-		{
-			case 1:
-				roundS = "one";
-				break;
-			case 2:
-				roundS = "two";
-				break;
-			case 3: 
-				roundS = "three";
-				break;
-			case 4:
-				roundS = "four";
-				break;
-		}
-		String puzzleNum = (levelS + "-" + roundS);
-		return puzzleNum;
-		
-	}
+
 	
 	public void connect() throws SQLException {
 		Connection dbConnection = null;
@@ -135,11 +97,15 @@ public class Puzzle {
 		}
 	}
 
-
+	public ArrayList<Integer> getSolutions()
+	{
+		return this.solutions;
+	}
+	
 	public void tableDisplay() throws FileNotFoundException
 	{
-		//Also from file?
-		String puzzleNum = getPuzzleNumAsString();
+		StringBuffer sb = new StringBuffer();
+		String puzzleNum = level + "-" + round;
 		String fileName = (puzzleNum + ".txt");
 		File solutionFile = new File(fileName);
 		Scanner fileInput = new Scanner(solutionFile);
@@ -149,8 +115,10 @@ public class Puzzle {
 			}
 		}
 		while (fileInput.hasNextLine()) {
-			System.out.println(fileInput.nextLine());
+			sb.append(fileInput.nextLine());
+			sb.append("\n");
 		}
+		System.out.println(sb.toString());
 	}
 	public static void main(String[] args)
 	{
@@ -163,7 +131,7 @@ public class Puzzle {
 			e1.printStackTrace();
 		}*/
 		try {
-			System.out.println(puz.getSolutions());
+			System.out.println(puz.setUpSolutions());
 			puz.tableDisplay();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
