@@ -1,37 +1,20 @@
-import java.io.File;
-
-import java.util.ArrayList;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Round {
 	
-///	private ArrayList<Person> people;
-///	private ArrayList<Integer> solutions;
 	private Puzzle puzzle;
 	private int levelNum;
 	private int roundNum;
-///	private Class round;
-///	public static int MAXROUNDS = 5;
 
 	public Round(int level, int round) {
 		this.roundNum = round;
-//		getPeople();
-	//	System.out.println(people.toString());
-		// getRules();
-	//	System.out.println(RoundOne.displayTable());
-	//	RoundOne.solutions();
 		this.levelNum = level;
 		puzzle = new Puzzle(roundNum, levelNum);
 	}
-
-	public Round(Round round) {
-		puzzle = new Puzzle(round.getRoundNum(), round.getLevelNum());
-	}
 	
-	public static boolean checkSolution() {
-		Scanner i = new Scanner(System.in);
-		Integer answer = i.nextInt(); // autoboxing
-		for (Integer num : puzzle.getSolutions()) {
+	public boolean checkSolution(Integer answer) {
+		for (String num : puzzle.getSolutions()) {
 			if (answer.equals(num)) {
 				return true;
 			}
@@ -53,5 +36,13 @@ public class Round {
 	public Puzzle getPuzzle()
 	{
 		return this.puzzle;
+	}
+	
+	public String getRoundDisplay() throws FileNotFoundException
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append(puzzle.getPeople());
+		sb.append(puzzle.getTableDisplay());
+		return sb.toString();
 	}
 }
