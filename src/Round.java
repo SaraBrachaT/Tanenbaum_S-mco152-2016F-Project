@@ -28,7 +28,7 @@ public class Round {
 		puzzle = new Puzzle(round.getRoundNum(), round.getLevelNum());
 	}
 	
-	public static boolean checkSolution() {
+	public boolean checkSolution() {
 		Scanner i = new Scanner(System.in);
 		Integer answer = i.nextInt(); // autoboxing
 		for (Integer num : puzzle.getSolutions()) {
