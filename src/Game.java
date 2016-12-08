@@ -1,7 +1,6 @@
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.Scanner;
-
-
 
 public class Game {
 
@@ -13,7 +12,7 @@ public class Game {
 	
 	private static int numLevels = 6;
 
-	public Game() throws FileNotFoundException {
+	public Game() throws FileNotFoundException, SQLException {
 		this.gameRules = getGameRules();
 		this.score = 0;
 		this.levels = new Level[numLevels];
@@ -77,6 +76,7 @@ public class Game {
 		}
 		return s.toString();
 	}
+	
 	//this will be uses and fixed when we have a bunch of levels to work with, for now we only have 1
 	public void doLevels(){
 		for(int i = 0; i < this.levels.length; i++){
@@ -85,16 +85,23 @@ public class Game {
 	}
 
 
+	public String displayLevelRules()
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("\nLevel Rules:");
+		for(int i=0; i < getCurrentLevel().getLevelRules().size(); i++){
+			sb.append("\n");
+			sb.append(getCurrentLevel().getLevelRules().get(i));
+		}
+		return sb.toString();
+	}
 	public static void main(String []args){
 		try{
 			Game shabbosTable = new Game();
-			boolean won = false;
+			boolean won = false; //put in round
 			while(!won){
 			System.out.println(shabbosTable.displayRules());
-			
-			for(int i=0; i < shabbosTable.getCurrentLevel().getLevelRules().size(); i++){
-				System.out.println(shabbosTable.getCurrentLevel().getLevelRules().get(i));
-			}
+			System.out.println(shabbosTable.displayLevelRules());
 			
 			System.out.println(shabbosTable.getCurrentLevel().getCurrentRound().getRoundDisplay());
 			
@@ -122,6 +129,9 @@ public class Game {
 		catch(FileNotFoundException e){
 			System.out.println("We are sorry, something went wrong with the file system. Closing application...Contact IT.");
 			System.exit(1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 	}	

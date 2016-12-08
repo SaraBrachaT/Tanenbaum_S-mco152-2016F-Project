@@ -19,12 +19,13 @@ public class Puzzle {
 	private ArrayList<String> people;
 	private String tableDisplay;
 	
-	public Puzzle(int l, int r)
+	public Puzzle(int l, int r) throws FileNotFoundException, SQLException
 	{
 		level = l;
 		round = r;
 		solutions = new ArrayList<String>();
 		people = new ArrayList<String>();
+		connect();
 	}
 	
 	public ArrayList<String> setUpSolutions() throws FileNotFoundException
@@ -51,37 +52,67 @@ public class Puzzle {
 
 	
 	public void connect() throws SQLException, FileNotFoundException {
+		Connection dbConn = setUpConnection();
+		String dbName = "ShabbosTable";
+		retrievePeople(dbConn,dbName);
+			
+	}
+	public Connection setUpConnection() throws FileNotFoundException
+	{
 		Connection dbConnection = null;
 		final String DATABASE_URL = "jdbc:sqlserver://DESKTOP-588999M\\SQLEXPRESS:63506;" + "databaseName=ShabbosTable"; //does the same thing regardless of whether or not the ; is there after the db name
 
 		try {
 			dbConnection = DriverManager.getConnection(DATABASE_URL, "ShabbosTableLogin", "TableShabbos");
 			dbConnection.setAutoCommit(false);
-			viewPeople(dbConnection, "ShabbosTable");
+			return dbConnection;
 
 		} catch (SQLException sqlException) {
 			sqlException.printStackTrace();
 			System.out.println("In other words... didn't connect");
 		}
-		
-			
+		return null;
 	}
 	
-	public void viewPeople(Connection con, String dbName) throws SQLException, FileNotFoundException {
+	public void retrievePeople(Connection con, String dbName) throws SQLException, FileNotFoundException {
 		ArrayList<Integer> peopleIds = getPeopleIDs();
 
 		Statement stmt = null;
 		
 		for(int i = 0; i < peopleIds.size(); i++){
 			int j = peopleIds.get(i);
-			String query = ("use ShabbosTable select FirstName, LastName, Age, Gender " + "from " + "Person" + " where PersonID ='" + j + "' "); 
+			String query = ("use ShabbosTable select PersonID, FirstName + ' ' + LastName As Name, Age, Gender " + "from " + "Person" + " where PersonID ='" + j + "' ") ;
 			try {
 				stmt = con.createStatement();
-				ResultSet rs = stmt.executeQuery(query);
+				ResultSet rs = stmt.executeQuery(query);	
 				while (rs.next()) {
-					String name = rs.getString("LastName");
-					System.out.println(name);
+					people.add("\n");
+					String PersonID = rs.getString("PersonID");
+					people.add(PersonID);
+					String Name = rs.getString("Name");
+					people.add(Name);
+					String age = rs.getString("Age");
+					people.add(age);
+					String gender = rs.getString("Gender");
+					people.add(gender);
+					rs.close();
+				//	if(rs2.next()){
+				//	String restriction = rs.getString("SpecificationDescription");
+				//	people.add(restriction);}
+					
 				}
+				String query2 = (" select PersonID, isNull(SpecificationDescription, ' ') As Restriction from Specification inner join PersonSpecification on Specification.SpecificationID = PersonSpecification.SpecificationID where PersonID = " + j);
+
+					stmt = con.createStatement();
+					ResultSet rs2 = stmt.executeQuery(query2);	
+					while (rs.next()) {
+						people.add("\n");
+						String PersonID = rs.getString("PersonID");
+						people.add(PersonID);
+						String restriction = rs.getString("SpecificationDescription");
+						people.add(restriction);
+					}
+				
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
 			} finally {
@@ -89,11 +120,9 @@ public class Puzzle {
 					stmt.close();
 				}
 			}
+			}
 		}
-
-
 		
-	}
 
 	public ArrayList<Integer> getPeopleIDs() throws FileNotFoundException
 	{
@@ -113,7 +142,6 @@ public class Puzzle {
 		{
 			ids.add(fileInput.nextInt());
 		}
-		System.out.println(ids.toString());
 		return ids;
 	
 	}
@@ -146,9 +174,9 @@ public class Puzzle {
 	{
 		return people.toString();
 	}
-	public static void main(String[] args)
+/*	public static void main(String[] args) throws FileNotFoundException, SQLException
 	{
-		Level l = new Level(1);
+		Level l = new Level(1, "ttsbtmbg1");
 		Round r = new Round(1,1);
 		Puzzle puz = new Puzzle(1,1);
 		try {
@@ -172,5 +200,5 @@ public class Puzzle {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 }

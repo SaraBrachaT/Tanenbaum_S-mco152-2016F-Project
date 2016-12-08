@@ -1,4 +1,5 @@
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 
 public class Round {
 	
@@ -6,10 +7,10 @@ public class Round {
 	private int levelNum;
 	private int roundNum;
 
-	public Round(int level, int round) {
+	public Round(int level, int round) throws FileNotFoundException, SQLException {
 		this.roundNum = round;
 		this.levelNum = level;
-		puzzle = new Puzzle(roundNum, levelNum);
+		puzzle = new Puzzle(levelNum, roundNum);
 	}
 	
 

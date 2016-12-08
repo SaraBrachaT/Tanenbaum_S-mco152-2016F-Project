@@ -15,7 +15,7 @@ public class Level {
 	
 	private static int numRounds = 5;
 	
-	public Level(int level, String passCode) throws FileNotFoundException {
+	public Level(int level, String passCode) throws FileNotFoundException, SQLException {
 		this.passCode = passCode;
 		this.levelNum = level;
 		this.rounds = new ArrayList<Round>();
@@ -29,7 +29,7 @@ public class Level {
 		return this.currentRound;
 	}
 
-	public void instantiateRounds()
+	public void instantiateRounds() throws FileNotFoundException, SQLException
 	{
 		for(int i = 0; i < numRounds; i++)
 		{
@@ -62,23 +62,4 @@ public class Level {
 	public String getPasscode(){
 		return this.passCode;
 	}
-	
-	
-
-	/*
-	public static void main(String[] args)
-	{
-		Level l;
-		try{
-		l = new Level(1, "abc1");
-		System.out.println(l.getLevelRules());
-
-		l = new Level(1, "abc1");
-		System.out.println(l.rounds.get(0).getPuzzle().getSolutions());
-		}
-		catch(FileNotFoundException e){
-			System.out.println("There was an error connecting to the file...contact IT");
-		}
-	}
-	*/
 }
