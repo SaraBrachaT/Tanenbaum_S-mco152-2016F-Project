@@ -18,7 +18,6 @@ public class Level {
 		levelRules = new ArrayList<String>();
 		instantiateRounds();
 		instantiateRules();
-
 	}
 //do super for multiple constructors in all classes
 	

@@ -8,8 +8,6 @@ public class Game {
 
 	public Game() {
 		this.gameRules = getGameRules();
-		System.out.println(displayRules());
-
 		score = 0;
 	}
 
