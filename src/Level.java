@@ -19,9 +19,9 @@ public class Level {
 		this.passCode = passCode;
 		this.levelNum = level;
 		this.rounds = new ArrayList<Round>();
+		instantiateRounds();
 		this.levelRules = new ArrayList<String>();
 		this.currentRound = rounds.get(0);
-		instantiateRounds();
 		instantiateRules();
 	}
 	

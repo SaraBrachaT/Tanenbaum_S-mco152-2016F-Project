@@ -11,23 +11,24 @@ public class Game {
 	private Round round;      
 	private Level currentLevel;
 	
-	private static int numLevels;
+	private static int numLevels = 6;
 
 	public Game() throws FileNotFoundException {
 		this.gameRules = getGameRules();
 		this.score = 0;
 		this.levels = new Level[numLevels];
-		this.currentLevel = levels[0];
-		instantiateLevels();
+		//instantiateLevels();
+		this.currentLevel = new Level(1, "ttsbtmbg1");
 	}
 
 	//the pass codes are left simple now, really this info should be read in from a file
+	/*
 	private void instantiateLevels() throws FileNotFoundException{
 		for(int i= 0; i < levels.length; i++){
 			levels[i] = new Level((i+1), ("ttsbtmbg" + i));
 		}
 	}
-
+	*/
 	public int getScore() { // for Scorekeeper
 		return this.score;
 	}
