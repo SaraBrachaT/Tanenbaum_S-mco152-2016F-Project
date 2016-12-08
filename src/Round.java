@@ -12,6 +12,7 @@ public class Round {
 		puzzle = new Puzzle(roundNum, levelNum);
 	}
 	
+
 	public boolean checkSolution(Integer answer) {
 		for (String num : puzzle.getSolutions()) {
 			if (answer.equals(num)) {

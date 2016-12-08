@@ -9,22 +9,24 @@ public class Level {
 	private int levelNum;
 	private ArrayList<Round> rounds;
 	private ArrayList<String> levelRules;
+	private String passCode;
+	//this is temporary
+	private Round currentRound;
 	
-	private static int numRounds;
+	private static int numRounds = 5;
 	
-	public Level() throws FileNotFoundException {
-		levelNum = 1;
-		rounds = new ArrayList<Round>();
-		levelRules = new ArrayList<String>();
+	public Level(int level, String passCode) throws FileNotFoundException {
+		this.passCode = passCode;
+		this.levelNum = level;
+		this.rounds = new ArrayList<Round>();
 		instantiateRounds();
+		this.levelRules = new ArrayList<String>();
+		this.currentRound = rounds.get(0);
 		instantiateRules();
 	}
-//do super for multiple constructors in all classes
 	
-	public Level(int level) {
-		// do data validation
-		// put in level rules
-		levelNum = level;
+	public Round getCurrentRound(){
+		return this.currentRound;
 	}
 
 	public void instantiateRounds()
@@ -56,16 +58,27 @@ public class Level {
 	{
 		return this.levelRules;
 	}
+	
+	public String getPasscode(){
+		return this.passCode;
+	}
+	
+	
 
+	/*
 	public static void main(String[] args)
 	{
 		Level l;
-
-		l = new Level(1);
+		try{
+		l = new Level(1, "abc1");
 		System.out.println(l.getLevelRules());
 
-		l = new Level(1);
+		l = new Level(1, "abc1");
 		System.out.println(l.rounds.get(0).getPuzzle().getSolutions());
-
+		}
+		catch(FileNotFoundException e){
+			System.out.println("There was an error connecting to the file...contact IT");
+		}
 	}
+	*/
 }
