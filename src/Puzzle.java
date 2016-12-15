@@ -146,9 +146,11 @@ public class Puzzle {
 	{
 		return people.toString();
 	}
+	
+	/*
 	public static void main(String[] args)
 	{
-		Level l = new Level(1);
+		Level l = new Level();
 		Round r = new Round(1,1);
 		Puzzle puz = new Puzzle(1,1);
 		try {
@@ -173,4 +175,5 @@ public class Puzzle {
 			e.printStackTrace();
 		}
 	}
+	*/
 }
