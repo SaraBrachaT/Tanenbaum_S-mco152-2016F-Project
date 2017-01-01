@@ -1,26 +1,71 @@
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.Scanner;
 
-
-
-public class Game {
+public class Game {  //serializable
 
 	private String[] gameRules;
-	private Integer score;
-	private Level[] levels;
-	private Round round;      
+	private Integer gameScore;
+	private Round currentRound;   //? Do we need to store this   
 	private Level currentLevel;
+	private String userName;
 	
-	private static int numLevels = 6;
-
-	public Game() throws FileNotFoundException {
+	private final int numLevels = 5;
+	
+	//New Game Constructor
+	public Game() throws FileNotFoundException, SQLException {
+		currentLevel = new Level(1);
+		gameScore = 0;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		this.gameRules = getGameRules();
-		this.score = 0;
+		this.gameScore = 0;
 		this.levels = new Level[numLevels];
 		//instantiateLevels();
-		this.currentLevel = new Level(1, "ttsbtmbg1");
+		this.currentLevel = new Level(1);
 	}
 
+	public void Game(int levelNum, String password)
+	{
+		//TODO
+	}
+	
+	public void Game(String userName)
+	{
+		//TODO
+	}
+	
+	public void playGame()
+	{
+		//TODO
+		/*
+		 * this will be uses and fixed when we have a bunch of levels to work with, for now we only have 1
+	public void doLevels(){
+		for(int i = 0; i < this.levels.length; i++){
+			
+		}
+	}
+		 */
+	}
 	//the pass codes are left simple now, really this info should be read in from a file
 	/*
 	private void instantiateLevels() throws FileNotFoundException{
@@ -29,45 +74,21 @@ public class Game {
 		}
 	}
 	*/
-	public int getScore() { // for Scorekeeper
-		return this.score;
-	}
-
-	public int getScoreCopy() { // for display purposes
-		int retrieveScore = this.score;
-		return retrieveScore;
-	}
-	
-	//this could just be replaced by a setLevel method with the validation in the main
-	public int resumeGameAtLevel(int level, String passCode) throws FileNotFoundException {
-		if(!(level == this.currentLevel.getLevelNum())){
-			return 1;//error codes
-		}
-		else if(!(passCode.equals(currentLevel.getPasscode()))){
-			this.currentLevel = levels[0];//back to the beginning!
-			return 2;
-		}
-		else {
-			this.currentLevel = levels[level-1];
-			return 0;//no error
-		}
-	
+	public int getScore() { 
+		int score =  this.gameScore;
+		return score;
 	}
 	
 	public Level getCurrentLevel(){
 		return this.currentLevel;
 	}
 
-	private String[] getGameRules() {
+	private String getGameRules() {
 		gameRules = new String[3];
 		gameRules[0] = "Males and females over age 9 cannot sit next to each other";
 		gameRules[1] = "Children under age 1 must sit next to a parent or grandparent";
 		gameRules[2] = "Any couple within the first year of marriage must sit together";
 		
-		return gameRules;
-	}
-
-	public String displayRules() {
 		StringBuffer s = new StringBuffer();
 		s.append("\nObject of the Game: \n You will see a list of people, their specifications "
 				+ "and a table format, you must figure out a way to seat them around the table.\n Game general rules:\n");
@@ -77,24 +98,21 @@ public class Game {
 		}
 		return s.toString();
 	}
-	//this will be uses and fixed when we have a bunch of levels to work with, for now we only have 1
-	public void doLevels(){
-		for(int i = 0; i < this.levels.length; i++){
-			
-		}
-	}
+	
 
+	public Round getCurrentRound()
+	{
+		return this.currentRound;
+	}
+	
 
 	public static void main(String []args){
 		try{
 			Game shabbosTable = new Game();
-			boolean won = false;
+			boolean won = false; //put in round
 			while(!won){
 			System.out.println(shabbosTable.displayRules());
-			
-			for(int i=0; i < shabbosTable.getCurrentLevel().getLevelRules().size(); i++){
-				System.out.println(shabbosTable.getCurrentLevel().getLevelRules().get(i));
-			}
+			System.out.println(shabbosTable.displayLevelRules());
 			
 			System.out.println(shabbosTable.getCurrentLevel().getCurrentRound().getRoundDisplay());
 			
@@ -122,6 +140,9 @@ public class Game {
 		catch(FileNotFoundException e){
 			System.out.println("We are sorry, something went wrong with the file system. Closing application...Contact IT.");
 			System.exit(1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 	}	
