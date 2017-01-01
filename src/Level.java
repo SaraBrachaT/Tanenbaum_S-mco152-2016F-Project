@@ -7,34 +7,23 @@ import java.util.Scanner;
 public class Level {
 
 	private int levelNum;
-	private ArrayList<Round> rounds;
 	private ArrayList<String> levelRules;
-	private String passCode;
-	//this is temporary
 	private Round currentRound;
+	private int levelScore;
 	
 	private static int numRounds = 5;
 	
-	public Level(int level, String passCode) throws FileNotFoundException, SQLException {
-		this.passCode = passCode;
+	public Level(int level) throws FileNotFoundException, SQLException {
 		this.levelNum = level;
-		this.rounds = new ArrayList<Round>();
-		instantiateRounds();
 		this.levelRules = new ArrayList<String>();
-		this.currentRound = rounds.get(0);
+		this.currentRound = new Round(levelNum, 1);
 		instantiateRules();
 	}
-	
-	public Round getCurrentRound(){
-		return this.currentRound;
-	}
 
-	public void instantiateRounds() throws FileNotFoundException, SQLException
+	public void playRounds()
 	{
-		for(int i = 0; i < numRounds; i++)
-		{
-			rounds.add(new Round(levelNum,i+1));
-		}
+		//TODO
+		
 	}
 	
 	public void instantiateRules() throws FileNotFoundException
@@ -50,6 +39,16 @@ public class Level {
 
 	}
 	
+	public void calculateLevelScore()
+	{
+		//TODO
+	}
+
+	public int getLevelScore()
+	{
+		return this.levelScore;
+	}
+	
 	public int getLevelNum(){
 		return this.levelNum;
 	}
@@ -58,8 +57,24 @@ public class Level {
 	{
 		return this.levelRules;
 	}
+
+	public Round getCurrentRound(){
+		return this.currentRound;
+	}
 	
-	public String getPasscode(){
-		return this.passCode;
+	public int getNumRounds()
+	{
+		return Level.numRounds;
+	}
+	
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		//TODO
+		sb.append("\nLevel Rules:");
+		sb.append(getLevelRules());
+		
+		
+		return sb.toString();
 	}
 }

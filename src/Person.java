@@ -1,63 +1,66 @@
+import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class Person {
 
-	private int pid;
+	private int personID;
 	private String firstName; // or title
 	private String lastName;
-	private Integer age;
-	private char gender; // enum
-	private Person spouse; // could be null
+	private int age;
+	private char gender;
+	private Integer spouseID; // could be null
 	private ArrayList<String> restrictions;
 	private ArrayList<String> preferences;
 
-	private static int id = 0;
-
-	public Person(String firstName, String lastName, int age, char gender, boolean married,
-			ArrayList<String> rest, ArrayList<String> pref, Person spouse) {
-		// check for valid data, no nulls. If issues throw new exceptions
-		int id = ++this.id;
-		this.pid = id;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.age = age;
-		this.gender = gender;
-		restrictions = new ArrayList<String>();
-		if (rest != null) {
-			for (String r : rest) {
-				this.restrictions.add(r);
-			}
-		}
-		if (pref != null) {
-			preferences = new ArrayList<String>();
-			for (String r : pref) {
-				this.preferences.add(r);
-			}
-		}
-		this.spouse = spouse; // maybe just do spouse.getName() here, we'll see
-								// if we end up using other fields of spouse
-
+	public Person(int pID, Connection dbConn) throws FileNotFoundException, SQLException {
+		retrievePerson(pID, dbConn);
 	}
 
-	public void setSpouse(Person s) {
-		this.spouse = s;
-	}
+	public void retrievePerson(int personID, Connection con) throws SQLException, FileNotFoundException {
 
-	public String getName() {
-		StringBuilder s = new StringBuilder();
+		Statement stmt = null;
 
-		s.append(firstName);
-		s.append(" ");
-		s.append(lastName);
+		String queryPerson = "use ShabbosTable select Person.PersonID, FirstName, LastName , Age, Gender from Person where PersonID = "
+				+ personID;
 
-		return s.toString();
+		stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery(queryPerson);
 
+		this.personID = rs.getInt("PersonID");
+		this.firstName = rs.getString("FirstName");
+		this.lastName = rs.getString("LastName");
+		this.age = rs.getInt("Age");
+		this.gender = rs.getString("Gender").charAt(0);
+
+		String queryRestriction = "use ShabbosTable select SpecificationDescription As Restriction from Specification inner join PersonSpecification  on Specification.SpecificationID = PersonSpecification.SpecificationID  inner join Person on  Person.PersonID = PersonSpecification.PersonID where Person.PersonID = "
+				+ personID + " and PersonSpecificationType = 'Restriction' ";
+
+		stmt = con.createStatement();
+		ResultSet rs2 = stmt.executeQuery(queryRestriction);
+
+		while (rs.next()) {
+			this.restrictions.add(rs.getString("Restriction"));
+		}
+
+		String queryPreference = "use ShabbosTable select SpecificationDescription As Preference from Specification inner join PersonSpecification on Specification.SpecificationID = PersonSpecification.SpecificationID inner join Person on  Person.PersonID = PersonSpecification.PersonID where Person.PersonID = "
+				+ personID + " and PersonSpecificationType = 'Preference' ";
+
+		stmt = con.createStatement();
+		ResultSet rs3 = stmt.executeQuery(queryPreference);
+
+		while (rs.next()) {
+			this.preferences.add("Preference");
+		}
 	}
 
 	public String toString() {
 		StringBuilder s = new StringBuilder();
 		s.append("\nPerson Number: ");
-		s.append(id);
+		s.append(personID);
 		s.append("\nName: ");
 		s.append(firstName);
 		s.append(" ");
@@ -82,19 +85,5 @@ public class Person {
 
 		return s.toString();
 	}
-	/*
-	 * methods -getters
-	 *
-	 *
-	 *
-	 *
-	 * -setters spouse
-	 *
-	 *
-	 *
-	 * -equals -compareTo //what will be our primary key to compare based on??
-	 * Should people be numbered?? Probably, so we can refer to them in code
-	 * -toString -findSpouse(primary key) throws PersonNotFoundException
-	 * -findSpouse(firstName, lastName) throws PersonNotFoundException
-	 */
-} // end class
+
+}
