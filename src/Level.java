@@ -1,6 +1,8 @@
-import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,7 +13,7 @@ public class Level {
 	private Round currentRound;
 	private int levelScore;
 	
-	private static int numRounds = 5;
+	private static int numRounds = 4;
 	
 	public Level(int level) throws FileNotFoundException, SQLException {
 		this.levelNum = level;
@@ -20,28 +22,34 @@ public class Level {
 		instantiateRules();
 	}
 
-	public void playRounds()
+	public void playLevel() throws FileNotFoundException, SQLException
 	{
-		//TODO
 		
+		while(currentRound.getRoundNum() <= numRounds)
+		{
+			System.out.println(toString());
+			System.out.println(currentRound.playRound());
+			Scanner keyboard = new Scanner(System.in);
+			String answer = keyboard.nextLine();
+			LocalTime endTime = LocalTime.now();
+			currentRound.afterPuzzle(answer, endTime);
+			levelScore += currentRound.getRoundScore();
+			
+			int temp = currentRound.getRoundNum();
+			currentRound = new Round(levelNum, ++temp);
+		}
 	}
 	
-	public void instantiateRules() throws FileNotFoundException
+	public void instantiateRules() throws FileNotFoundException, SQLException
 	{
-		String fileName = (levelNum + ".txt");
-		File rulesFile = new File("LevelRules\\" + fileName);
-		Scanner fileInput = new Scanner(rulesFile);
-		
-		while(fileInput.hasNextLine())
+		String query = "use ShabbosTable select RuleDescription from LevelRule inner join Rules on LevelRule.RuleID = Rules.RuleID where LevelNum = " + this.levelNum;
+		Statement stmt = Game.getConnection().createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while(rs.next())
 		{
-			levelRules.add(fileInput.nextLine());
+			this.levelRules.add(rs.getString("RuleDescription"));
 		}
 
-	}
-	
-	public void calculateLevelScore()
-	{
-		//TODO
 	}
 
 	public int getLevelScore()
@@ -70,10 +78,12 @@ public class Level {
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		//TODO
 		sb.append("\nLevel Rules:");
-		sb.append(getLevelRules());
-		
+		for(String s : levelRules)
+		{
+			sb.append(s);
+			sb.append("\n");
+		}
 		
 		return sb.toString();
 	}

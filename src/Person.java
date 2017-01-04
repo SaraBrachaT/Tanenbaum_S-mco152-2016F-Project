@@ -16,18 +16,18 @@ public class Person {
 	private ArrayList<String> restrictions;
 	private ArrayList<String> preferences;
 
-	public Person(int pID, Connection dbConn) throws FileNotFoundException, SQLException {
-		retrievePerson(pID, dbConn);
+	public Person(int pID) throws FileNotFoundException, SQLException {
+		retrievePerson(pID);
 	}
 
-	public void retrievePerson(int personID, Connection con) throws SQLException, FileNotFoundException {
+	public void retrievePerson(int personID) throws SQLException, FileNotFoundException {
 
 		Statement stmt = null;
 
-		String queryPerson = "use ShabbosTable select Person.PersonID, FirstName, LastName , Age, Gender from Person where PersonID = "
+		String queryPerson = "use ShabbosTable select Person.PersonID, FirstName, LastName , Age, Gender, SpouseID from Person where PersonID = "
 				+ personID;
 
-		stmt = con.createStatement();
+		stmt = Game.getConnection().createStatement();
 		ResultSet rs = stmt.executeQuery(queryPerson);
 
 		this.personID = rs.getInt("PersonID");
@@ -39,7 +39,7 @@ public class Person {
 		String queryRestriction = "use ShabbosTable select SpecificationDescription As Restriction from Specification inner join PersonSpecification  on Specification.SpecificationID = PersonSpecification.SpecificationID  inner join Person on  Person.PersonID = PersonSpecification.PersonID where Person.PersonID = "
 				+ personID + " and PersonSpecificationType = 'Restriction' ";
 
-		stmt = con.createStatement();
+		stmt = Game.getConnection().createStatement();
 		ResultSet rs2 = stmt.executeQuery(queryRestriction);
 
 		while (rs.next()) {
@@ -49,7 +49,7 @@ public class Person {
 		String queryPreference = "use ShabbosTable select SpecificationDescription As Preference from Specification inner join PersonSpecification on Specification.SpecificationID = PersonSpecification.SpecificationID inner join Person on  Person.PersonID = PersonSpecification.PersonID where Person.PersonID = "
 				+ personID + " and PersonSpecificationType = 'Preference' ";
 
-		stmt = con.createStatement();
+		stmt = Game.getConnection().createStatement();
 		ResultSet rs3 = stmt.executeQuery(queryPreference);
 
 		while (rs.next()) {

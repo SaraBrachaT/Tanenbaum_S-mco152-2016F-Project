@@ -22,11 +22,11 @@ public class Round {
 		roundScore = 100; //this is the base score
 	}
 	
-	public void playRound() throws FileNotFoundException, SQLException
+	public String playRound() throws FileNotFoundException, SQLException
 	{
 		puzzle = new Puzzle(generateRoundID());
-		puzzle.play();
 		startTime = LocalTime.now();
+		return puzzle.play() + "\n" + toString();
 	}
 	
 	public String generateRoundID()
@@ -97,4 +97,10 @@ public class Round {
 		return this.roundScore;
 	}
 
+	public String toString()
+	{
+		return "\n\nEnter your solution starting from the left head, moving clockwise."
+				+ "\nUse the person's id to reference him/her"
+					+ " \nMake sure to enter a - between each number. Sample input: 2-5-6-1-3-4";
+	}
 }
