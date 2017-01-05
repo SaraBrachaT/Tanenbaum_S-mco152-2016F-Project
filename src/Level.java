@@ -1,4 +1,4 @@
-import java.io.FileNotFoundException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,14 +15,14 @@ public class Level {
 	
 	private static int numRounds = 4;
 	
-	public Level(int level) throws FileNotFoundException, SQLException {
+	public Level(int level) throws SQLException {
 		this.levelNum = level;
 		this.levelRules = new ArrayList<String>();
 		this.currentRound = new Round(levelNum, 1);
 		instantiateRules();
 	}
 
-	public void playLevel() throws FileNotFoundException, SQLException
+	public void playLevel() throws SQLException
 	{
 		
 		while(currentRound.getRoundNum() <= numRounds)
@@ -35,15 +35,15 @@ public class Level {
 			currentRound.afterPuzzle(answer, endTime);
 			levelScore += currentRound.getRoundScore();
 			
-			int temp = currentRound.getRoundNum();
-			currentRound = new Round(levelNum, ++temp);
+			currentRound = new Round(levelNum, currentRound.getRoundNum()+1);
 		}
 	}
 	
-	public void instantiateRules() throws FileNotFoundException, SQLException
+	public void instantiateRules() throws SQLException
 	{
 		String query = "use ShabbosTable select RuleDescription from LevelRule inner join Rules on LevelRule.RuleID = Rules.RuleID where LevelNum = " + this.levelNum;
-		Statement stmt = Game.getConnection().createStatement();
+		Connection con = Game.getConnection();
+		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
 		while(rs.next())
 		{

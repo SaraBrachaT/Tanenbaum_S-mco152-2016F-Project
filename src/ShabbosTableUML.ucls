@@ -63,8 +63,7 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="12">    
-    <bendpoint x="514" y="227"/>    
-    <end type="SOURCE" refId="2" navigable="false">      
+    <end type="SOURCE" refId="3" navigable="false">      
       <attribute id="13" name="currentRound"/>      
       <multiplicity id="14" minimum="0" maximum="1"/>    
     </end>    
@@ -72,17 +71,9 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="15">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="16" name="currentRound"/>      
-      <multiplicity id="17" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="18">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="19" name="people"/>      
-      <multiplicity id="20" minimum="0" maximum="2147483647"/>    
+      <attribute id="16" name="people"/>      
+      <multiplicity id="17" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  

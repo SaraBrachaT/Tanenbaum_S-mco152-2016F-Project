@@ -16,11 +16,11 @@ public class Person {
 	private ArrayList<String> restrictions;
 	private ArrayList<String> preferences;
 
-	public Person(int pID) throws FileNotFoundException, SQLException {
+	public Person(int pID) throws SQLException {
 		retrievePerson(pID);
 	}
 
-	public void retrievePerson(int personID) throws SQLException, FileNotFoundException {
+	public void retrievePerson(int personID) throws SQLException {
 
 		Statement stmt = null;
 

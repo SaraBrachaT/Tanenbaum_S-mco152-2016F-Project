@@ -1,7 +1,10 @@
-import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Game {  //serializable
@@ -16,37 +19,110 @@ public class Game {  //serializable
 	private final int numLevels = 5;
 	
 	//New Game Constructor
-	public Game() throws FileNotFoundException, SQLException {
+	public Game() throws SQLException {
 		connect();
 		currentLevel = new Level(1);
 		gameScore = 0;
 		gameRules = new String[3];  //get the rules from TT
 		instantiateGameRules();
-				
 	}
 
-	public void Game(String userName)
+	public Game(String userName)
 	{
 		//TODO
 	}
 	
-	public void playGame()
+	public void playGame() throws SQLException
 	{
-		//TODO
+		createUser();
+		displayNamesAndScores();
+		while(currentLevel.getLevelNum() <= numLevels)
+		{
+			currentLevel.playLevel();
+			gameScore += currentLevel.getLevelScore();
+			updateScoreInDB();
+			currentLevel = new Level( currentLevel.getLevelNum()+1);	
+		}
+		
 	}
 	
-	public Connection connect() throws FileNotFoundException, SQLException
+	public void connect() throws SQLException
 	{
-		Connection conn = null;
 		final String DATABASE_URL = "jdbc:sqlserver://DESKTOP-588999M\\SQLEXPRESS:63506;" + "databaseName=ShabbosTable"; //does the same thing regardless of whether or not the ; is there after the db name
 
-		conn = DriverManager.getConnection(DATABASE_URL, "ShabbosTableLogin", "TableShabbos");
-		conn.setAutoCommit(false);
-		return conn;
+		Game.dbConnection= DriverManager.getConnection(DATABASE_URL, "ShabbosTableLogin", "TableShabbos");
+		Game.dbConnection.setAutoCommit(false);
 	}
 	
+	public ArrayList<Integer> retrieveUserScores() throws SQLException
+	{
+		ArrayList<Integer> userScores = new ArrayList<Integer>();
+		
+		String query = "use ShabbosTable select userscore from Users order by userName";
+		Statement stmt = Game.getConnection().createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while(rs.next())
+		{
+			userScores.add(rs.getInt("userscore"));
+		}
+		return userScores;
+	}
+	
+	public void updateScoreInDB() throws SQLException
+	{
+		Game.getConnection().createStatement().executeQuery("use ShabbosTable update Users set UserScore = "+ this.gameScore +"  where UserName = " + this.userName);
+	}
+	
+	public ArrayList<String> retrieveUserNames() throws SQLException
+	{
+		ArrayList<String> userNames = new ArrayList<String>();
+		
+		Statement stmt = Game.getConnection().createStatement();
+		ResultSet rs = stmt.executeQuery("use ShabbosTable select username from Users order by userName");
+		while(rs.next())
+		{
+			userNames.add(rs.getString("username"));
+		}
+		return userNames;
+	}
+	
+	public void createUser() throws SQLException
+	{
+		System.out.println("Please enter a username");
+		Scanner keyboard = new Scanner(System.in);
+		setUsername(keyboard.nextLine());
+		Connection con =Game.getConnection();
+		String query = "insert into Users (userName, Userscore) values(?,?)";
+		 PreparedStatement preparedStmt = con.prepareStatement(query);
+	      preparedStmt.setString (1, "userD");
+	      preparedStmt.setInt(2, 3);
+	      preparedStmt.execute();
+		
+	}
+	
+	
+	public String displayNamesAndScores() throws SQLException
+	{
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append("SCORES");
+		
+		for(int i = 0; i < retrieveUserNames().size(); i++)
+		{
+			sb.append(retrieveUserNames().get(i).toUpperCase());
+			sb.append(": ");
+			sb.append(retrieveUserScores().get(i));
+			sb.append("\n");
+		}
+		
+		return sb.toString();
+	}
+	
+	
 	private void instantiateGameRules() {
-		//TODO
+		gameRules[0] = "Males and females over age 9 cannot sit next to each other";
+  		gameRules[1] = "Children under age 1 must sit next to a parent or grandparent";
+  		gameRules[2] = "Any couple within the first year of marriage must sit together";
 	}
 	
 	public void setUsername(String user)
@@ -64,12 +140,10 @@ public class Game {  //serializable
 	
 	public static Connection getConnection()
 	{
-		Connection c = Game.dbConnection;
-		return c;
+		return Game.dbConnection;
 	}
 
 	private String getGameRules() {
-		
 		
 		StringBuffer s = new StringBuffer();
 		s.append("\nObject of the Game: \n You will see a list of people, their specifications "

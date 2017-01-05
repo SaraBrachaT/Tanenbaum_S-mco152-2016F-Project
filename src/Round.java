@@ -15,14 +15,14 @@ public class Round {
 	
 	private final int MAX_TRIES = 3;
 
-	public Round(int level, int round) throws FileNotFoundException, SQLException {
+	public Round(int level, int round) throws SQLException {
 		this.roundNum = round;
 		this.levelNum = level;
 		this.tryNum = 1; 
 		roundScore = 100; //this is the base score
 	}
 	
-	public String playRound() throws FileNotFoundException, SQLException
+	public String playRound() throws SQLException
 	{
 		puzzle = new Puzzle(generateRoundID());
 		startTime = LocalTime.now();
@@ -35,7 +35,7 @@ public class Round {
 		return puzNum;
 	}
 
-	public void afterPuzzle(String answer, LocalTime endTime) throws FileNotFoundException, SQLException
+	public void afterPuzzle(String answer, LocalTime endTime) throws SQLException
 	{
 		if(checkSolution(answer))
 		{

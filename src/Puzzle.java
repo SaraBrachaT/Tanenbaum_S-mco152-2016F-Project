@@ -1,4 +1,5 @@
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,7 +15,7 @@ public class Puzzle {
 	private String tableDisplay;
 	private String puzNum;
 	
-	public Puzzle(String roundID) throws FileNotFoundException, SQLException
+	public Puzzle(String roundID) throws SQLException
 	{
 		solutions = new ArrayList<String>();
 		numPrefsMet = new ArrayList<Integer>();
@@ -22,7 +23,7 @@ public class Puzzle {
 		puzNum = roundID;
 	}
 	
-	public String play() throws FileNotFoundException, SQLException{
+	public String play() throws SQLException{
 		retrievePeople();
 		retrieveTableDisplay();
 		return toString();
@@ -42,7 +43,7 @@ public class Puzzle {
 		return peopleIDs;	
 	}
 	
-	public void retrievePeople() throws SQLException, FileNotFoundException
+	public void retrievePeople() throws SQLException
 	{
 		ArrayList<Integer> peopleIDs = retrievePeopleIDs();
 		for(Integer p : peopleIDs)
@@ -52,7 +53,7 @@ public class Puzzle {
 		
 	}
 	
-	public ArrayList<String> retrieveSolutions() throws FileNotFoundException, SQLException
+	public ArrayList<String> retrieveSolutions() throws SQLException
 	{
 		String query = "use ShabbosTable select SolutionDescription, NumPrefsMet from Solutions where RoundID = " + puzNum;
 		Statement stmt = Game.getConnection().createStatement();
@@ -66,7 +67,7 @@ public class Puzzle {
 		return solutions;
 	}
 	
-	public void retrieveTableDisplay() throws FileNotFoundException, SQLException
+	public void retrieveTableDisplay() throws SQLException
 	{
 		String query = "use ShabbosTable select TableSetup from Rounds where RoundID = " + puzNum;
 		Statement stmt = Game.getConnection().createStatement();
@@ -101,4 +102,5 @@ public class Puzzle {
 			sb.append(getTableDisplay());
 		return sb.toString();
 	}
+
 }
