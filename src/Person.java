@@ -1,5 +1,3 @@
-import java.io.FileNotFoundException;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -35,6 +33,10 @@ public class Person {
 		this.lastName = rs.getString("LastName");
 		this.age = rs.getInt("Age");
 		this.gender = rs.getString("Gender").charAt(0);
+		if((Integer)rs.getInt("SpouseID") != null)
+		{
+			this.spouseID = rs.getInt("SpouseID");
+		}
 
 		String queryRestriction = "use ShabbosTable select SpecificationDescription As Restriction from Specification inner join PersonSpecification  on Specification.SpecificationID = PersonSpecification.SpecificationID  inner join Person on  Person.PersonID = PersonSpecification.PersonID where Person.PersonID = "
 				+ personID + " and PersonSpecificationType = 'Restriction' ";
@@ -69,6 +71,10 @@ public class Person {
 		s.append(age);
 		s.append("\nGender: ");
 		s.append(gender);
+		if(spouseID != null)
+		{
+			s.append(spouseID);
+		}
 		if (restrictions != null) {
 			s.append("\nRestrictions: ");
 			for (String r : restrictions) {
