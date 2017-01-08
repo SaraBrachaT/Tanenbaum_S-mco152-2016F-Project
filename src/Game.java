@@ -35,7 +35,7 @@ public class Game {  //serializable
 	public void playGame() throws SQLException
 	{
 		createUser();
-		displayNamesAndScores();
+		System.out.println(getNamesAndScores());
 		while(currentLevel.getLevelNum() <= numLevels)
 		{
 			currentLevel.playLevel();
@@ -101,7 +101,7 @@ public class Game {  //serializable
 	}
 	
 	
-	public String displayNamesAndScores() throws SQLException
+	public String getNamesAndScores() throws SQLException
 	{
 		StringBuffer sb = new StringBuffer();
 		
@@ -143,15 +143,17 @@ public class Game {  //serializable
 		return Game.dbConnection;
 	}
 
-	private String getGameRules() {
+	public String getGameRules() {
 		
 		StringBuffer s = new StringBuffer();
-		s.append("\nObject of the Game: \n You will see a list of people, their specifications "
-				+ "and a table format, you must figure out a way to seat them around the table.\n Game general rules:\n");
+		s.append("<html><strong>Object of the Game</em> </strong> <br>You will see a list of people, their specifications "
+				+ "<br>and a table format, you must figure out a way to seat them around the table.<br> <strong> Game general rules </strong> <br>");
 		for(String st : gameRules)
 		{
 			s.append(st);
+			s.append("<br>");
 		}
+		s.append("</html>");
 		return s.toString();
 	}
 	}

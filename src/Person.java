@@ -16,47 +16,58 @@ public class Person {
 
 	public Person(int pID) throws SQLException {
 		retrievePerson(pID);
+		retrieveRestrictions(pID);
+		retrievePreferences(pID);
 	}
 
 	public void retrievePerson(int personID) throws SQLException {
 
-		Statement stmt = null;
-
 		String queryPerson = "use ShabbosTable select Person.PersonID, FirstName, LastName , Age, Gender, SpouseID from Person where PersonID = "
 				+ personID;
 
-		stmt = Game.getConnection().createStatement();
+		Statement stmt = Game.getConnection().createStatement();
 		ResultSet rs = stmt.executeQuery(queryPerson);
+		
 
-		this.personID = rs.getInt("PersonID");
-		this.firstName = rs.getString("FirstName");
-		this.lastName = rs.getString("LastName");
-		this.age = rs.getInt("Age");
-		this.gender = rs.getString("Gender").charAt(0);
-		if((Integer)rs.getInt("SpouseID") != null)
+		while(rs.next())
 		{
-			this.spouseID = rs.getInt("SpouseID");
+			this.personID = rs.getInt("PersonID");
+			this.firstName = rs.getString("FirstName");
+			this.lastName = rs.getString("LastName");
+			this.age = rs.getInt("Age");
+			this.gender = rs.getString("Gender").charAt(0);
+			if((Integer)rs.getInt("SpouseID") != null)
+			{
+				this.spouseID = rs.getInt("SpouseID");
+			}
 		}
-
-		String queryRestriction = "use ShabbosTable select SpecificationDescription As Restriction from Specification inner join PersonSpecification  on Specification.SpecificationID = PersonSpecification.SpecificationID  inner join Person on  Person.PersonID = PersonSpecification.PersonID where Person.PersonID = "
+	}
+	
+	public void retrieveRestrictions(int personID) throws SQLException
+	{
+		String queryRestriction = "use ShabbosTable select SpecificationDescription from Specification inner join PersonSpecification  on Specification.SpecificationID = PersonSpecification.SpecificationID  inner join Person on  Person.PersonID = PersonSpecification.PersonID where Person.PersonID = "
 				+ personID + " and PersonSpecificationType = 'Restriction' ";
 
-		stmt = Game.getConnection().createStatement();
-		ResultSet rs2 = stmt.executeQuery(queryRestriction);
+		Statement stmt = Game.getConnection().createStatement();
+		ResultSet rs = stmt.executeQuery(queryRestriction);
 
 		while (rs.next()) {
-			this.restrictions.add(rs.getString("Restriction"));
+			this.restrictions.add(rs.getString("SpecificationDescription"));
 		}
-
+	}
+	
+	public void retrievePreferences(int personID) throws SQLException
+	{
 		String queryPreference = "use ShabbosTable select SpecificationDescription As Preference from Specification inner join PersonSpecification on Specification.SpecificationID = PersonSpecification.SpecificationID inner join Person on  Person.PersonID = PersonSpecification.PersonID where Person.PersonID = "
 				+ personID + " and PersonSpecificationType = 'Preference' ";
 
-		stmt = Game.getConnection().createStatement();
-		ResultSet rs3 = stmt.executeQuery(queryPreference);
+		Statement stmt = Game.getConnection().createStatement();
+		ResultSet rs = stmt.executeQuery(queryPreference);
 
 		while (rs.next()) {
 			this.preferences.add("Preference");
 		}
+
 	}
 
 	public int getPersonID() {
@@ -105,6 +116,7 @@ public class Person {
 		s.append(gender);
 		if(spouseID != null)
 		{
+			s.append("\nSpouse ID: ");
 			s.append(spouseID);
 		}
 		if (restrictions != null) {

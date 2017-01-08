@@ -1,8 +1,4 @@
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -23,10 +19,9 @@ public class Puzzle {
 		puzNum = roundID;
 	}
 	
-	public String play() throws SQLException{
+	public void play() throws SQLException{
 		retrievePeople();
 		retrieveTableDisplay();
-		return toString();
 	}
 	
 	public ArrayList<Integer> retrievePeopleIDs() throws SQLException

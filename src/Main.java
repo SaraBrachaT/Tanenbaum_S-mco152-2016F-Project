@@ -3,7 +3,8 @@ import java.util.Scanner;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
+		//GameGUI gui = new GameGUI();
 		Scanner keyboard = new Scanner(System.in);
 		int choice = displayMenu(keyboard);
 		Game g = createGame(choice, keyboard);

@@ -26,7 +26,8 @@ public class Round {
 	{
 		puzzle = new Puzzle(generateRoundID());
 		startTime = LocalTime.now();
-		return puzzle.play() + "\n" + toString();
+		puzzle.play();
+		return puzzle.toString() + "\n" + toString();
 	}
 	
 	public String generateRoundID()
@@ -95,6 +96,12 @@ public class Round {
 	public int getRoundScore()
 	{
 		return this.roundScore;
+	}
+	
+	//for GUI
+	public Puzzle getPuzzle()
+	{
+		return this.puzzle;
 	}
 
 	public String toString()
