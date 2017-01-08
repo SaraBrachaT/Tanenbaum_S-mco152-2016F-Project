@@ -59,6 +59,38 @@ public class Person {
 		}
 	}
 
+	public int getPersonID() {
+		return personID;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public char getGender() {
+		return gender;
+	}
+
+	public Integer getSpouseID() {
+		return spouseID;
+	}
+
+	public ArrayList<String> getRestrictions() {
+		return restrictions;
+	}
+
+	public ArrayList<String> getPreferences() {
+		return preferences;
+	}
+
 	public String toString() {
 		StringBuilder s = new StringBuilder();
 		s.append("\nPerson Number: ");
