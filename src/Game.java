@@ -46,6 +46,17 @@ public class Game {  //serializable
 		
 	}
 	
+	public void GUIPlayGame() throws SQLException
+	{
+		while(currentLevel.getLevelNum() <= numLevels)
+		{
+			currentLevel.GUIPlayLevel();
+			gameScore += currentLevel.getLevelScore();
+			updateScoreInDB();
+			currentLevel = new Level( currentLevel.getLevelNum()+1);	
+		}
+	}
+	
 	public void connect() throws SQLException
 	{
 		final String DATABASE_URL = "jdbc:sqlserver://DESKTOP-588999M\\SQLEXPRESS:63506;" + "databaseName=ShabbosTable"; //does the same thing regardless of whether or not the ; is there after the db name
@@ -90,23 +101,21 @@ public class Game {  //serializable
 	{
 		System.out.println("Please enter a username");
 		Scanner keyboard = new Scanner(System.in);
-		setUsername(keyboard.nextLine());
-		Connection con =Game.getConnection();
-		String query = "insert into Users (userName, Userscore) values(?,?)";
-		 PreparedStatement preparedStmt = con.prepareStatement(query);
-	      preparedStmt.setString (1, "userD");
-	      preparedStmt.setInt(2, 3);
-	      preparedStmt.execute();
-		
+		String userName = keyboard.nextLine();
+		setUsername(userName);
+		String query = "use shabbostable insert into Users (userName, Userscore) values(?,?)";
+		PreparedStatement preparedStmt = Game.getConnection().prepareStatement(query);
+		preparedStmt.setString(1, userName);
+		preparedStmt.setInt(2, 0);
+		preparedStmt.executeUpdate();
+		preparedStmt.close();
 	}
 	
 	
 	public String getNamesAndScores() throws SQLException
 	{
 		StringBuffer sb = new StringBuffer();
-		
-		sb.append("SCORES");
-		
+				
 		for(int i = 0; i < retrieveUserNames().size(); i++)
 		{
 			sb.append(retrieveUserNames().get(i).toUpperCase());
@@ -118,6 +127,23 @@ public class Game {  //serializable
 		return sb.toString();
 	}
 	
+	public String getGUINamesAndScores() throws SQLException
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("<html>");
+		
+		for(int i = 0; i < retrieveUserNames().size(); i++)
+		{
+			sb.append(retrieveUserNames().get(i).toUpperCase());
+			sb.append(": ");
+			sb.append(retrieveUserScores().get(i));
+			sb.append("<br>");
+		}
+		
+		sb.append("</html>");
+		
+		return sb.toString();
+	}
 	
 	private void instantiateGameRules() {
 		gameRules[0] = "Males and females over age 9 cannot sit next to each other";

@@ -1,3 +1,4 @@
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,9 +16,11 @@ public class Person {
 	private ArrayList<String> preferences;
 
 	public Person(int pID) throws SQLException {
+		restrictions = new ArrayList<String>();
+		preferences = new ArrayList<String>();
 		retrievePerson(pID);
-		retrieveRestrictions(pID);
-		retrievePreferences(pID);
+		retrievePersonRestrictions(pID);
+		retrievePersonPrefs(pID);
 	}
 
 	public void retrievePerson(int personID) throws SQLException {
@@ -28,48 +31,50 @@ public class Person {
 		Statement stmt = Game.getConnection().createStatement();
 		ResultSet rs = stmt.executeQuery(queryPerson);
 		
-
-		while(rs.next())
-		{
+		rs.next();
 			this.personID = rs.getInt("PersonID");
 			this.firstName = rs.getString("FirstName");
 			this.lastName = rs.getString("LastName");
 			this.age = rs.getInt("Age");
 			this.gender = rs.getString("Gender").charAt(0);
-			if((Integer)rs.getInt("SpouseID") != null)
-			{
-				this.spouseID = rs.getInt("SpouseID");
-			}
-		}
+			if((Integer)rs.getInt("SpouseID") != null)	this.spouseID = rs.getInt("SpouseID");
+		stmt.close();
+		rs.close();
+		
 	}
 	
-	public void retrieveRestrictions(int personID) throws SQLException
+	public void retrievePersonRestrictions(int personID) throws SQLException
 	{
+		
 		String queryRestriction = "use ShabbosTable select SpecificationDescription from Specification inner join PersonSpecification  on Specification.SpecificationID = PersonSpecification.SpecificationID  inner join Person on  Person.PersonID = PersonSpecification.PersonID where Person.PersonID = "
 				+ personID + " and PersonSpecificationType = 'Restriction' ";
 
-		Statement stmt = Game.getConnection().createStatement();
-		ResultSet rs = stmt.executeQuery(queryRestriction);
+		Statement stmt2 = Game.getConnection().createStatement();
+		ResultSet rs2 = stmt2.executeQuery(queryRestriction);
 
-		while (rs.next()) {
-			this.restrictions.add(rs.getString("SpecificationDescription"));
+		while (rs2.next()) {
+			this.restrictions.add(rs2.getString("SpecificationDescription"));
 		}
+		stmt2.close();
+		rs2.close();
 	}
-	
-	public void retrievePreferences(int personID) throws SQLException
+
+	public void retrievePersonPrefs(int personID) throws SQLException
 	{
-		String queryPreference = "use ShabbosTable select SpecificationDescription As Preference from Specification inner join PersonSpecification on Specification.SpecificationID = PersonSpecification.SpecificationID inner join Person on  Person.PersonID = PersonSpecification.PersonID where Person.PersonID = "
+		
+		String queryPreference = "use ShabbosTable select SpecificationDescription from Specification inner join PersonSpecification on Specification.SpecificationID = PersonSpecification.SpecificationID inner join Person on  Person.PersonID = PersonSpecification.PersonID where Person.PersonID = "
 				+ personID + " and PersonSpecificationType = 'Preference' ";
 
-		Statement stmt = Game.getConnection().createStatement();
-		ResultSet rs = stmt.executeQuery(queryPreference);
+		Statement stmt3 = Game.getConnection().createStatement();
+		ResultSet rs = stmt3.executeQuery(queryPreference);
 
 		while (rs.next()) {
-			this.preferences.add("Preference");
+			this.preferences.add(rs.getString("SpecificationDescription"));
 		}
 
+		rs.close();
+		stmt3.close();
 	}
-
 	public int getPersonID() {
 		return personID;
 	}
@@ -104,7 +109,7 @@ public class Person {
 
 	public String toString() {
 		StringBuilder s = new StringBuilder();
-		s.append("\nPerson Number: ");
+		s.append("\n\nPerson ID Number: ");
 		s.append(personID);
 		s.append("\nName: ");
 		s.append(firstName);
@@ -114,20 +119,20 @@ public class Person {
 		s.append(age);
 		s.append("\nGender: ");
 		s.append(gender);
-		if(spouseID != null)
+		if(spouseID != null || spouseID != 0)
 		{
 			s.append("\nSpouse ID: ");
 			s.append(spouseID);
 		}
-		if (restrictions != null) {
+		if (!restrictions.isEmpty()) {
 			s.append("\nRestrictions: ");
 			for (String r : restrictions) {
 				s.append(r);
 			}
 		}
-		if (preferences != null) {
+		if (!preferences.isEmpty()) {
 			s.append("\nPreferences: ");
-			for (String r : restrictions) {
+			for (String r : preferences) {
 				s.append(r);
 			}
 

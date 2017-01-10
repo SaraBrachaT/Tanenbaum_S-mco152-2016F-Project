@@ -11,6 +11,7 @@ public class Main {
 		try {
 			g.playGame();
 		} catch (SQLException e) {
+			e.printStackTrace();
 			System.out.println("Database Error. To resolve this issue, please call 347-638-4683");
 		}
 	}

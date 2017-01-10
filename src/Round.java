@@ -1,4 +1,3 @@
-import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.time.LocalTime;
 
@@ -12,19 +11,17 @@ public class Round {
 	private int roundScore; // for this round. Level will add this to level's score at the end of the round. At the end of the level, Game will add it to its score
 	private LocalTime startTime;
 	private int solutionNum;
-	
-	private final int MAX_TRIES = 3;
 
-	public Round(int level, int round) throws SQLException {
+	public Round(int level, int round) {
 		this.roundNum = round;
 		this.levelNum = level;
 		this.tryNum = 1; 
 		roundScore = 100; //this is the base score
+		puzzle = new Puzzle(generateRoundID());
 	}
 	
 	public String playRound() throws SQLException
 	{
-		puzzle = new Puzzle(generateRoundID());
 		startTime = LocalTime.now();
 		puzzle.play();
 		return puzzle.toString() + "\n" + toString();
@@ -36,19 +33,17 @@ public class Round {
 		return puzNum;
 	}
 
-	public void afterPuzzle(String answer, LocalTime endTime) throws SQLException
+	public boolean afterPuzzle(String answer, LocalTime endTime)
 	{
 		if(checkSolution(answer))
 		{
 			calculateScore(endTime);
+			return true;
 		}
 		else
 		{
-			if(tryNum < MAX_TRIES)
-			{
-				tryNum ++;
-				playRound();
-			}
+			tryNum ++;
+			return false;
 		}
 	}
 	
@@ -76,7 +71,7 @@ public class Round {
 		
 		//Part 4: Based on Time
 		int timing = regSeconds - calculateSeconds(endTime);
-		roundScore -= timing * 5; //if timing is positive, will gain points; if negative, will lose points
+		roundScore += timing * 5; //if timing is positive, will gain points; if negative, will lose points
 		
 	}
 	
@@ -102,6 +97,11 @@ public class Round {
 	public Puzzle getPuzzle()
 	{
 		return this.puzzle;
+	}
+
+	public int getTryNum()
+	{
+		return this.tryNum;
 	}
 
 	public String toString()

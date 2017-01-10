@@ -11,17 +11,17 @@ public class Puzzle {
 	private String tableDisplay;
 	private String puzNum;
 	
-	public Puzzle(String roundID) throws SQLException
+	public Puzzle(String roundID)
 	{
 		solutions = new ArrayList<String>();
 		numPrefsMet = new ArrayList<Integer>();
-		people = new ArrayList<Person>();
 		puzNum = roundID;
 	}
 	
 	public void play() throws SQLException{
 		retrievePeople();
 		retrieveTableDisplay();
+		retrieveSolutions();
 	}
 	
 	public ArrayList<Integer> retrievePeopleIDs() throws SQLException
@@ -41,11 +41,9 @@ public class Puzzle {
 	public void retrievePeople() throws SQLException
 	{
 		ArrayList<Integer> peopleIDs = retrievePeopleIDs();
+		people = new ArrayList<Person>();
 		for(Integer p : peopleIDs)
-		{	
-			people.add(new Person(p));
-		}
-		
+			people.add(new Person(p));		
 	}
 	
 	public ArrayList<String> retrieveSolutions() throws SQLException
@@ -55,10 +53,12 @@ public class Puzzle {
 		ResultSet rs = stmt.executeQuery(query);
 		while(rs.next())
 		{
-			solutions.add("SolutionDescription");
+			solutions.add(rs.getString("SolutionDescription"));
 			numPrefsMet.add(rs.getInt("NumPrefsMet"));
 		}
 	
+		rs.close();
+		stmt.close();
 		return solutions;
 	}
 	
@@ -67,6 +67,7 @@ public class Puzzle {
 		String query = "use ShabbosTable select TableSetup from Rounds where RoundID = " + puzNum;
 		Statement stmt = Game.getConnection().createStatement();
 		ResultSet rs = stmt.executeQuery(query);
+		rs.next();
 		tableDisplay =  rs.getString("TableSetup");
 	}
 	
@@ -93,8 +94,10 @@ public class Puzzle {
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer();
-			sb.append(getPeople());
-			sb.append(getTableDisplay());
+		for(Person p : getPeople())
+			sb.append(p.toString());
+		sb.append("\n");
+		sb.append(getTableDisplay());
 		return sb.toString();
 	}
 

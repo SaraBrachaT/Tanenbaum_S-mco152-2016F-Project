@@ -16,27 +16,35 @@ public class GameGUI extends JFrame {
 	private JPanel menuPanel;
 	private JPanel gamePanel;
 	private JLabel welcomeLabel;
+	private JLabel menuLabel;
 	private JLabel gameLabel;
 	private JMenuItem newGame;
 	private JMenuItem savedGame;
+	private JMenuItem exit;
 	private JLabel gameRules;
-	private JLabel levelRules;
 	private JLabel score;
-	
+	private JLabel lblUsersAndScores;
+	private JLabel usersAndScores;
+		
 	public static Game game;
+
 
 	public GameGUI() throws SQLException{
 		GameGUI.game = new Game();
-		//game.playGame();
+		game.GUIPlayGame();
 		menuPanel = new JPanel();
 		gamePanel = new JPanel();
 		welcomeLabel = new JLabel("Welcome to Shabbos Table");
 		gameLabel = new JLabel("THE SHABBOS TABLE");
 		newGame = new JMenuItem("Play New Game");
-		savedGame = new JMenuItem("Open Saved Game (Feature not yet available)");
+		savedGame = new JMenuItem("Open Saved Game (Future Feature)");
+		exit = new JMenuItem("Exit");
 		gameRules = new JLabel(game.getGameRules());
-		levelRules = new JLabel(game.getCurrentLevel().toString());
 		score = new JLabel("Score: " + game.getScore());
+		lblUsersAndScores = new JLabel("USERS AND SCORES");
+		usersAndScores = new JLabel(game.getGUINamesAndScores());
+		usersAndScores.setVerticalAlignment(SwingConstants.TOP);
+		menuLabel = new JLabel("Please Select an Item From the Menu");
 		
 		//setUpMenu();
 		setUpGame();
@@ -55,20 +63,30 @@ public class GameGUI extends JFrame {
 	    menuPanel.setLayout(null);
 			
 		
-	    welcomeLabel.setBounds(22, 13, 427, 24);
+	    welcomeLabel.setBounds(400, 25, 600, 30);
 	    welcomeLabel.setForeground(Color.DARK_GRAY);
 	    welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-	    welcomeLabel.setFont(new Font("Algerian", Font.PLAIN, 22));
+	    welcomeLabel.setFont(new Font("Algerian", Font.PLAIN, 40));
 	    menuPanel.add(welcomeLabel);
 	    
+	    menuLabel.setBounds(80, 100, 550, 40);
+	    menuLabel.setBackground(new Color(255, 255, 153));
+	    menuLabel.setForeground(Color.DARK_GRAY);
+	    menuLabel.setFont(new Font("Segoe UI Black", Font.PLAIN, 30));
+	    menuPanel.add(menuLabel);
+	    
 	    setUpMenuItem(newGame);
-	    newGame.setBounds(77, 50, 450, 30);
+	    newGame.setBounds(77, 150, 550, 40);
 	  //  newGame.addActionListener(new AddListener(mySB));
 		
 	    setUpMenuItem(savedGame);
-	    savedGame.setBounds(77, 85, 450, 30);
+	    savedGame.setBounds(77, 200, 550, 40);
 	 //   savedGame.addActionListener(new RemoveListener(mySB));
+	    
+	    setUpMenuItem(exit);
+	    exit.setBounds(77, 250, 550, 40);
 	
+	    setUpDisplayUsersAndScores();
 	    
 	    setSize(1300,800);
 	    this.setLocationRelativeTo(null);
@@ -80,11 +98,26 @@ public class GameGUI extends JFrame {
 	    item.setBorder(new BevelBorder(BevelBorder.RAISED, Color.LIGHT_GRAY, null, null, null));
 	    item.setBackground(new Color(255, 255, 153));
 	    item.setForeground(Color.DARK_GRAY);
-	    item.setFont(new Font("Segoe UI Black", Font.PLAIN, 18));
+	    item.setFont(new Font("Segoe UI Black", Font.PLAIN, 30));
 	    menuPanel.add(item);
 	}
 	
-	public void setUpGame()
+	public void setUpDisplayUsersAndScores()
+	{
+
+	    lblUsersAndScores.setBounds(800, 100, 550, 40);
+	    lblUsersAndScores.setBackground(new Color(255, 255, 153));
+	    lblUsersAndScores.setForeground(Color.DARK_GRAY);
+	    lblUsersAndScores.setFont(new Font("Segoe UI Black", Font.PLAIN, 30));
+	    menuPanel.add(lblUsersAndScores);
+	    
+	    usersAndScores.setBounds(800, 150, 460, 800);
+	    usersAndScores.setForeground(Color.DARK_GRAY);
+	    usersAndScores.setHorizontalAlignment(SwingConstants.LEFT);
+	    usersAndScores.setFont(new Font("Arial", Font.PLAIN, 22));
+	    menuPanel.add(usersAndScores);
+	}
+	public void setUpGame() throws SQLException
 	{
 		setTitle("Game");
 		
@@ -105,19 +138,17 @@ public class GameGUI extends JFrame {
 	    gameRules.setFont(new Font("Arial", Font.PLAIN, 18));
 	    gamePanel.add(gameRules);
 	    
-	    levelRules.setBounds(22,220,500,100);
-	    levelRules.setForeground(Color.DARK_GRAY);
-	    levelRules.setHorizontalAlignment(SwingConstants.LEFT);
-	    levelRules.setFont(new Font("Arial", Font.PLAIN, 18));
-	    gamePanel.add(levelRules);
-	    
 	    score.setBounds(0,630,250,50);
 	    score.setForeground(Color.DARK_GRAY);
 	    score.setHorizontalAlignment(SwingConstants.LEFT);
 	    score.setFont(new Font("Arial", Font.PLAIN, 18));
 	    gamePanel.add(score);
-	
-	    //setUpPeople();
+	    
+	    JLabel getUserName = new JLabel(game.getCurrentLevel().getCurrentRound().playRound());
+	    getUserName.setBounds(10, 150, 46, 14);
+	    gamePanel.add(getUserName);
+	    
+	    setUpPeople();
 	    
 	    setSize(1300,800);
 	    this.setLocationRelativeTo(null);
