@@ -10,6 +10,11 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JTable;
 
 public class GameGUI extends JFrame {
 
@@ -25,13 +30,14 @@ public class GameGUI extends JFrame {
 	private JLabel score;
 	private JLabel lblUsersAndScores;
 	private JLabel usersAndScores;
+	private JTable people;
 		
 	public static Game game;
-
+	private JTable table;
 
 	public GameGUI() throws SQLException{
 		GameGUI.game = new Game();
-		game.GUIPlayGame();
+		//game.GUIPlayGame();
 		menuPanel = new JPanel();
 		gamePanel = new JPanel();
 		welcomeLabel = new JLabel("Welcome to Shabbos Table");
@@ -45,12 +51,11 @@ public class GameGUI extends JFrame {
 		usersAndScores = new JLabel(game.getGUINamesAndScores());
 		usersAndScores.setVerticalAlignment(SwingConstants.TOP);
 		menuLabel = new JLabel("Please Select an Item From the Menu");
+		people = new JTable();
 		
-		//setUpMenu();
+	//	setUpMenu();
 		setUpGame();
 		
-		//createFrame(game);
-		//contentPane.setVisible(true);
 			}	
 	
 	public void setUpMenu()
@@ -77,7 +82,16 @@ public class GameGUI extends JFrame {
 	    
 	    setUpMenuItem(newGame);
 	    newGame.setBounds(77, 150, 550, 40);
-	  //  newGame.addActionListener(new AddListener(mySB));
+	    newGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					menuPanel.setVisible(false);
+					setUpGame();
+				} catch (SQLException e) {
+					JOptionPane.showMessageDialog(null, "Cannot connect to database. \nPlease contact 347-638-4683", "Connection Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
 		
 	    setUpMenuItem(savedGame);
 	    savedGame.setBounds(77, 200, 550, 40);
@@ -144,10 +158,25 @@ public class GameGUI extends JFrame {
 	    score.setFont(new Font("Arial", Font.PLAIN, 18));
 	    gamePanel.add(score);
 	    
+	    boolean success = false;
+	    do{
+	    try{
+	    	String userButton = JOptionPane.showInputDialog(null, "Enter username");
+	    	if(userButton == null){ JOptionPane.getRootFrame().setVisible(false); break;} //either do this whole zach or just do system.exit and close game
+	    	game.GUICreateUser(userButton);
+	    	success = true;
+	   	    }
+	    catch(SQLException e){
+	    	JOptionPane.showMessageDialog(null, "Invalid user name. Please make sure to enter a name that does not yet exist", "Error Creating User", JOptionPane.ERROR_MESSAGE);
+	    }
+    
+	    }
+	    while(!success);
 	    JLabel getUserName = new JLabel(game.getCurrentLevel().getCurrentRound().playRound());
 	    getUserName.setBounds(10, 150, 46, 14);
 	    gamePanel.add(getUserName);
 	    
+    
 	    setUpPeople();
 	    
 	    setSize(1300,800);
@@ -164,12 +193,16 @@ public class GameGUI extends JFrame {
 			pLabels.add(createNewPersonLabel(p));
 			
 		}
+	    table = new JTable();
+	    table.setBounds(439, 360, -397, -105);
+	    gamePanel.add(table);
 		for(JLabel l : pLabels)
 		{
-			l.setBounds(100*i, 300, 100, 500);
+			l.setBounds(100*i, 5000, 800, 500);
 		    l.setForeground(Color.DARK_GRAY);
 		    l.setHorizontalAlignment(SwingConstants.LEFT);
 		    l.setFont(new Font("Arial", Font.PLAIN, 18));
+		    i++;
 		    gamePanel.add(l);
 		}
 	}

@@ -7,6 +7,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.microsoft.sqlserver.jdbc.SQLServerException;
+
 public class Game {  //serializable
 
 	private String[] gameRules;
@@ -16,7 +18,7 @@ public class Game {  //serializable
 	
 	private static Connection dbConnection;
 	
-	private final int numLevels = 5;
+	private final int numLevels = 2; //CHANGED
 	
 	//New Game Constructor
 	public Game() throws SQLException {
@@ -41,7 +43,7 @@ public class Game {  //serializable
 			currentLevel.playLevel();
 			gameScore += currentLevel.getLevelScore();
 			updateScoreInDB();
-			currentLevel = new Level( currentLevel.getLevelNum()+1);	
+			currentLevel = new Level(currentLevel.getLevelNum()+1);	
 		}
 		
 	}
@@ -62,7 +64,7 @@ public class Game {  //serializable
 		final String DATABASE_URL = "jdbc:sqlserver://DESKTOP-588999M\\SQLEXPRESS:63506;" + "databaseName=ShabbosTable"; //does the same thing regardless of whether or not the ; is there after the db name
 
 		Game.dbConnection= DriverManager.getConnection(DATABASE_URL, "ShabbosTableLogin", "TableShabbos");
-		Game.dbConnection.setAutoCommit(false);
+		Game.dbConnection.setAutoCommit(true);
 	}
 	
 	public ArrayList<Integer> retrieveUserScores() throws SQLException
@@ -81,7 +83,11 @@ public class Game {  //serializable
 	
 	public void updateScoreInDB() throws SQLException
 	{
-		Game.getConnection().createStatement().executeQuery("use ShabbosTable update Users set UserScore = "+ this.gameScore +"  where UserName = " + this.userName);
+		PreparedStatement ps = Game.getConnection().prepareStatement("use ShabbosTable update Users set UserScore = ?  where UserName = ?");
+		ps.setInt(1, this.gameScore);
+		ps.setString(2, this.userName);
+		ps.executeUpdate();
+		ps.close();
 	}
 	
 	public ArrayList<String> retrieveUserNames() throws SQLException
@@ -99,13 +105,37 @@ public class Game {  //serializable
 	
 	public void createUser() throws SQLException
 	{
+		boolean success = false;
+		do
+		{
 		System.out.println("Please enter a username");
 		Scanner keyboard = new Scanner(System.in);
 		String userName = keyboard.nextLine();
 		setUsername(userName);
+		try{
 		String query = "use shabbostable insert into Users (userName, Userscore) values(?,?)";
 		PreparedStatement preparedStmt = Game.getConnection().prepareStatement(query);
-		preparedStmt.setString(1, userName);
+		preparedStmt.setString(1, this.userName);
+		preparedStmt.setInt(2, 0);
+		preparedStmt.executeUpdate();
+		preparedStmt.close();
+		success = true;
+		}
+		catch(SQLServerException e )
+		{
+			System.out.println("Invalid user name. Please make sure to enter a name that does not yet exist");
+		}
+		}
+		while(!success);
+	
+}
+	
+	public void GUICreateUser(String username) throws SQLException
+	{
+		setUsername(username);
+		String query = "use shabbostable insert into Users (userName, Userscore) values(?,?)";
+		PreparedStatement preparedStmt = Game.getConnection().prepareStatement(query);
+		preparedStmt.setString(1, this.userName);
 		preparedStmt.setInt(2, 0);
 		preparedStmt.executeUpdate();
 		preparedStmt.close();
